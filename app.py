@@ -1,10 +1,12 @@
 import pickle
 from flask import Flask, Response
+from flask_cors import CORS
 import json
 from datetime import datetime
 from numpy import array
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/api/search/<string:fighter>')
 def get_fighter_names(fighter):
@@ -20,7 +22,7 @@ def get_fighter_stats(fighter):
         stats = data[fighter]
     return stats
 
-@app.route('/predict/<string:fighter1>/<string:fighter2>/<float:odds1>/<float:odds2>')
+@app.route('/api/predict/<string:fighter1>/<string:fighter2>/<float:odds1>/<float:odds2>')
 def get_current_time(fighter1, fighter2, odds1, odds2):
     with open('random_forest.pickle', 'rb') as f:
         model = pickle.load(f)
@@ -79,8 +81,3 @@ def get_current_time(fighter1, fighter2, odds1, odds2):
     # returns the probability of the predicted winner
     prob = model.predict_proba(pred_list)[0][int(prediction[0])] * 100
     return {"winner": return_val, "probability": prob}
-
-
-@app.route('/test/<string:test_val>')
-def test_route(test_val):
-    return {"test": test_val}
