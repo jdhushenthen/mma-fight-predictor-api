@@ -12,7 +12,7 @@ CORS(app)
 def get_fighter_names(fighter):
     with open('data.json', 'r') as f:
         data = json.load(f)
-        matching = [{"value": s, "label": s} for s in data.keys() if fighter in s]
+        matching = [{"value": s, "label": s} for s in data.keys() if fighter.lower() in s.lower()]
     return {"options": matching}
 
 @app.route('/api/stats/<string:fighter>')
